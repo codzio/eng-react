@@ -7,7 +7,8 @@ import Cases from "./pages/cases";
 import Contact from "./pages/contact";
 import Gallery from "./pages/gallery";
 import UseCases from "./pages/use-cases";
-// import ProductMain from "./pages/products";
+//import ProductMain from "./pages/products";
+import ProductCategories from "./pages/productCategories"
 import SingleProduct from "./pages/product-single";
 import BlogMain from "./pages/blogs";
 import BlogSingle from "./pages/blog-single";
@@ -48,6 +49,7 @@ const AppRouter = () => {
                 <Route path="/blogs/*" element={<BlogMain />} />
                 <Route path="/blogs/:blogSlug" element={<BlogSingle />} />
                 <Route path="/category/:categorySlug/*" element={<CategoryDetail />} />
+                <Route path="/product-categories/:categorySlug?" element={<ProductCategories />} />
                 <Route path="/:pageSlug?" element={<Home />} />
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>

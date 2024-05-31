@@ -86,7 +86,8 @@ function Header(props) {
 						</li>
 						<li className={isActive('/products')}>
 							<span>
-								<NavLink to="/products" onClick={(e) => e.preventDefault()}>products</NavLink>
+								{/*<NavLink to="/products" onClick={(e) => e.preventDefault()}>products</NavLink>*/}
+								<NavLink to="/product-categories">Products</NavLink>
 								<i className={`fa-solid fa-plus ${isDropdownOpen ? 'rotate' : ''}`} onClick={ismobileNav ? () => toggleDropdown() : null}></i>
 							</span>
 							<div className={`dropdown p-dropdown ${isDropdownOpen ? 'show' : ''}`}>
@@ -99,7 +100,8 @@ function Header(props) {
 											{data.product[0].disableLinking ? (
 											  <NavLink to="#">{data.category.title}</NavLink>
 											) : (
-											  <NavLink onClick={refreshPage} to={`/products/${data.product[0].slug}`}>{data.category.title}</NavLink>
+											  //<NavLink onClick={refreshPage} to={`/products/${data.product[0].slug}`}>{data.category.title}</NavLink>
+												<NavLink onClick={refreshPage} to={`/product-categories/${data.category.slug}`}>{data.category.title}</NavLink>
 											)}
 
 											{data.product && data.product.length > 0 ? (
@@ -114,7 +116,7 @@ function Header(props) {
 														) : (
 														  <NavLink onClick={refreshPage} to={`/products/${data.slug}`}>{data.title}</NavLink>
 														)}
-														{data.subProduct && data.subProduct.length > 0 ? (
+														{/*{data.subProduct && data.subProduct.length > 0 ? (
 															<>
 															<i className={`fa-solid fa-plus ${openDropdowns[data._id] ? 'rotate' : ''}`} onClick={ismobileNav ? () => toggleDropdowns(data._id) : null}></i>
 															<div className={`sub-dropdown inner ${openDropdowns[data._id] ? 'show' : ''}`}>
@@ -127,7 +129,7 @@ function Header(props) {
 																</ul>
 															</div>
 															</>
-														) : null}
+														) : null}*/}
 														</li>
 													))}
 												</ul>
