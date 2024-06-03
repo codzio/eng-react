@@ -3,6 +3,7 @@ import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home';
 import About from './pages/About';
 import Career from "./pages/career";
+import SubmitApp from "./pages/submitApp";
 import Cases from "./pages/cases";
 import Contact from "./pages/contact";
 import Gallery from "./pages/gallery";
@@ -39,9 +40,10 @@ const AppRouter = () => {
         <Router>
             <Routes>
                 <Route path="/about" element={<About />} />
-                <Route path="/career" element={<Career />} />
+                <Route path="/career/:jobSlug?" element={<Career />} />
                 <Route path="/use-cases/:projectSlug" element={<Cases />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/submit-application" element={<SubmitApp />} />
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/projects" element={<UseCases />} />
                 {/* <Route path="/products/*" element={<ProductMain />} /> */}
