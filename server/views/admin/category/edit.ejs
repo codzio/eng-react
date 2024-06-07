@@ -1,0 +1,87 @@
+<%- include("../header"); %>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+    <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <%- include("../navbar"); %>
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <%- include("../sidebar"); %>
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content  flex-column-fluid " >
+                        <div id="kt_app_content_container" class="app-container  container-fluid ">
+                            <form id="kt_ecommerce_add_category_form" class="form d-flex flex-column flex-lg-row" action="/admin/category/doUpdateCategory" method="post">
+                                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">                
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="required form-label">Category Name</label>
+                                                <input type="text" name="categoryName" class="form-control mb-2" placeholder="Category name" value="<%= categoryData.title %>" />
+                                                <div class="text-muted fs-7">A category name is required and recommended to be unique.</div>
+                                                <span id="categoryNameErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Category Slug</label>
+                                                <input readonly id="categorySlug" type="text" name="categorySlug" class="form-control mb-2" placeholder="Category Slug" value="<%= categoryData.slug %>" />
+                                                <div class="text-muted fs-7">A category slug is required and recommended to be unique.</div>
+                                                <span id="categorySlugErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div>
+                                                <label class="form-label">Description</label>
+                                                <!-- <div id="description" name="description" class="min-h-200px mb-2"><%- categoryData.description -%></div> -->
+                                                <textarea name="description" cols="4" rows="4" class="form-control mb-2 description"><%- categoryData.description -%></textarea>
+                                                <span id="descriptionErr" class="text-danger removeErr"></span>
+                                            </div>                                            
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>Meta Options</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <div class="mb-10">                             
+                                                <label class="form-label">Meta Title</label>
+                                                <input type="text" class="form-control mb-2" name="metaTitle" placeholder="Meta title" value="<%= categoryData.metaTitle %>" />      
+                                                <div class="text-muted fs-7">Set a meta tag title. Recommended to be simple and precise keywords.</div>
+                                                <span id="metaTitleErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            
+                                            <div class="mb-10">
+                                                <label class="form-label">Meta Description</label>
+                                                <!-- <div id="metaDescription" name="metaDescription" class="min-h-200px mb-2"><%- categoryData.metaDescription -%></div> -->
+                                                <textarea name="metaDescription" cols="4" rows="4" class="form-control mb-2 description"><%- categoryData.metaDescription -%></textarea>
+                                                <span id="metaDescriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <input type="hidden" name="_id" value="<%= categoryData._id %>">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="indicator-label">
+                                                Save Changes
+                                            </span>
+                                            <span class="indicator-progress">
+                                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>        
+                        </div>           
+                    </div>
+                </div>
+                <%- include("../sub_footer"); %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../footer"); %>

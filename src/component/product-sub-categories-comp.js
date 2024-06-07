@@ -37,7 +37,7 @@ const ProductSubCategoriesComp = ({ productData, loading }) => {
       </div>
       <div className="blog_listing_sec use_cases_gallery">
         <div className="containers">
-          <div className="blog_listing_sec_inner">
+          <div className="blog_listing_sec_inner product-category-grid">
             {products.map((product) => (
               <Link
                 to={`/products/${product.slug}`}

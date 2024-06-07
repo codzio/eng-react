@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import Layout from '../component/layout';
 import HomeBanner from '../component/home-banner';
 import HomeAboutVideo from '../component/home-about-video';
@@ -32,11 +32,20 @@ const Home = () => {
   const [homePage, setHomePage] = useState(true);
   const bannerImg = 'images/banner1.png';
 
+  const redirect = () => {
+    window.location.href = `https://enggenvsolutions.com/`;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const isHomePage = typeof pageSlug === 'undefined';
         const data = await fetchPageData(pageSlug, isHomePage);
+
+        if (!isHomePage && data.page.length === 0) {
+          redirect();
+          return;
+        }
 
         const pageData = isHomePage ? data.home[0] : data.page[0];
         const newPageTitle = pageData.metaTitle || pageData.title;

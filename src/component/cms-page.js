@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../styles/Home.css";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { StickyContainer, Sticky } from "react-sticky";
+//import { useNavigate } from "react-router-dom";
 
 const CmsPage = (props) => {
-    console.log(props);
-    const navigate = useNavigate();
-    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+    //console.log(props);
+    //const navigate = useNavigate();
+    //const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
-    const { title, description, createdAt } = props.data.page[0];
+    const { description } = props.data.page[0];
 
-    function refreshPage() {
-        setTimeout(function() {
-            window.location.reload(true);
-        }, 500);
-    }
+    // function refreshPage() {
+    //     setTimeout(function() {
+    //         window.location.reload(true);
+    //     }, 500);
+    // }
 
     return (
         <div className="blog_category_sec">

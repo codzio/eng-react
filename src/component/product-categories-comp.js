@@ -25,7 +25,7 @@ const ProductCategoriesComp = ({ categories, loading }) => {
   return (
     <div className="blog_listing_sec use_cases_gallery">
       <div className="containers">
-        <div className="blog_listing_sec_inner">
+        <div className="blog_listing_sec_inner product-category-grid">
           {categoryData.map((category) => (
             <Link
               to={`/product-categories/${category.slug}`}

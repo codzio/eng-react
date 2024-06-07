@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import OtherBanner from "../component/other-banner";
+//import OtherBanner from "../component/other-banner";
 import ProductSingleSlider from "../component/product-single-slider";
 import FeaturesSingleProduct from "../component/features-single-product";
 import Layout from "../component/layout";
@@ -7,9 +7,9 @@ import PreLoader from "../component/preloader";
 import { useParams } from "react-router-dom";
 
 const SingleProduct = () => {
-    const bannerImg = "../images/banner1.png";
-    const bannerTitle = "Our Products";
-    const bannerPattern = "../images/other_banner_pattern.png";
+    //const bannerImg = "../images/banner1.png";
+    //const bannerTitle = "Our Products";
+    //const bannerPattern = "../images/other_banner_pattern.png";
     const [product, setProduct] = useState(null);
     const [prodVariants, setProductVariants] = useState(null);
     const [subProduct, setSubProduct] = useState(null);

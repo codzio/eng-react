@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import OtherBanner from "../component/other-banner";
+//import OtherBanner from "../component/other-banner";
 import ContactForm from "../component/contact-form";
 import Layout from "../component/layout";
 import PreLoader from "../component/preloader";
 
 const ContactUs = () => {
     const [loadedData, setLoadedData] = useState(null);
-    const bannerImg = 'images/banner1.png';
-    const bannerTitle = "Contact Us";
-    const [pageTitle, setPageTitle] = useState('Enggenv Solutions | Contact');
+    // const bannerImg = 'images/banner1.png';
+    // const bannerTitle = "Contact Us";
+    const [pageTitle] = useState('Enggenv Solutions | Contact');
 
     const metaDescription = '';
     const metaImage = 'images/team_image.jpg';
-    const [metaData, setMetaData] = useState({metaDescription: metaDescription, metaImage:metaImage});
+    const [metaData] = useState({metaDescription: metaDescription, metaImage:metaImage});
 
     useEffect(() => {
         const fetchData = async () => {

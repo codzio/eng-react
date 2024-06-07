@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import OtherBanner from "../component/other-banner";
+//import OtherBanner from "../component/other-banner";
 import Events from "../component/events";
 import AwardsRecognition from "../component/awards-recognition";
 import Certificate from "../component/certificate";
@@ -8,9 +8,9 @@ import PreLoader from "../component/preloader";
 
 const Gallery = () => {
     const [gallerData, setGalleryData] = useState(null);
-    const bannerImg = 'images/banner1.png';
-    const bannerTitle = "Our Gallery";
-    const [pageTitle, setPageTitle] = useState('Enggenv Solutions | Our Gallery');
+    //const bannerImg = 'images/banner1.png';
+    //const bannerTitle = "Our Gallery";
+    const [pageTitle] = useState('Enggenv Solutions | Our Gallery');
     const [metaData, setMetaData] = useState([]);
 
     useEffect(() => {

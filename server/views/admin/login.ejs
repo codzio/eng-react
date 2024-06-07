@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" >
+<!--begin::Head-->
+<head>
+<title><%= siteSettings.websiteName + " | Login" %></title>
+<meta charset="utf-8"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>      
+<link rel="shortcut icon" href="/<%= siteSettings.favicon %>"/>
+
+<!--begin::Fonts(mandatory for all pages)-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>        <!--end::Fonts-->
+
+
+
+<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
+    <link href="/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/style.bundle.css" rel="stylesheet" type="text/css"/>
+<!--end::Global Stylesheets Bundle-->
+
+
+<script>
+// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking)
+if (window.top != window.self) {
+window.top.location.replace(window.self.location.href);
+}
+
+siteUrl = "<%= siteUrl %>";
+<%- siteSettings.scripts.header -%>
+</script>
+</head>
+<!--end::Head-->
+
+<!--begin::Body-->
+<body  id="kt_body"  class="app-blank" >
+<!--begin::Theme mode setup on page load-->
+
+<!--begin::Root-->
+<div class="d-flex flex-column flex-root" id="kt_app_root">
+
+<!--begin::Authentication - Sign-in -->
+<div class="d-flex flex-column flex-lg-row flex-column-fluid">    
+<!--begin::Body-->
+<div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
+<!--begin::Form-->
+<div class="d-flex flex-center flex-column flex-lg-row-fluid">
+<!--begin::Wrapper-->
+<div class="w-lg-500px p-10">
+
+<!--begin::Form-->
+<form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form" action="/admin/doAuth">
+<!--begin::Heading-->
+<div class="text-center mb-11">
+<!--begin::Title-->
+<h1 class="text-dark fw-bolder mb-3">
+Sign In
+</h1>
+<!--end::Title-->
+</div>
+<!--begin::Heading-->
+
+
+
+<div class="fv-row mb-8">
+    <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent"/> 
+    <span id="emailErr" class="removeErr text-danger"></span>
+</div>
+
+<div class="fv-row mb-3">    
+    <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent"/>
+    <span id="passwordErr" class="removeErr text-danger"></span>
+</div>
+
+<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+    <div></div>
+    <!-- <a href="#" class="link-primary">Forgot Password ?</a> -->
+</div> 
+
+<div class="d-grid mb-10">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+        <span class="indicator-label">Sign In</span>
+        <span class="indicator-progress">
+            Please wait...<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        </span>
+    </button>
+</div>
+
+</form>
+
+</div>
+
+</div>
+    
+
+
+</div>
+<!--end::Body-->
+
+<!--begin::Aside-->
+<div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2" style="background-image: url('/<%= siteSettings.loginPageImg %>')">
+    <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">          
+        <a href="/admin" class="mb-0 mb-lg-12">
+            <img alt="<%= siteSettings.websiteName %>" src="/<%= siteSettings.websiteLogo %>" class="h-60px h-lg-75px"/>
+        </a>    
+    </div>
+</div>
+</div>
+    </div>
+<script>
+var hostUrl = "/metronic8/demo38/assets/";        </script>
+
+<!--begin::Global Javascript Bundle(mandatory for all pages)-->
+    <script src="/plugins/global/plugins.bundle.js"></script>
+    <script src="/js/scripts.bundle.js"></script>
+<!--end::Global Javascript Bundle-->
+
+
+<!--begin::Custom Javascript(used for this page only)-->
+    <script>
+        $(document).ready(function () {
+            $("#kt_sign_in_form").submit(function (e) { 
+                e.preventDefault();
+                
+                url = $("#kt_sign_in_form").attr('action');
+                formData = $("#kt_sign_in_form").serialize();
+
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    dataType: "json",
+                    beforeSend: function() {
+                        $(".removeErr").html('');
+                        $(".indicator-label").hide();
+                        $(".indicator-progress").show();
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        window.location.href = siteUrl+succRes.redirectUrl;
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        if (errResp.eType == 'field') {
+                            //field error
+                            $.each(errResp.errors, function(index, field) {                                
+                                if (field.param == '_csrf') {
+                                    alert(field.msg);
+                                } else {
+                                    $(`#${field.param}Err`).html(field.msg);
+                                }
+                            });
+                        } else {
+                            //final error
+                            Swal.fire({ 
+                                text: errResp.msg, 
+                                icon: "error", 
+                                buttonsStyling: !1, 
+                                confirmButtonText: "Ok, got it!", 
+                                customClass: { confirmButton: "btn btn-danger" },
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                // position: 'top-end',
+                                timer: 2500,
+                                timerProgressBar: true,
+                            });
+                        }
+
+                        $(".indicator-label").show();
+                        $(".indicator-progress").hide();
+
+                    }
+                });
+                
+            });
+        });
+    </script>
+<%- siteSettings.scripts.footer -%>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<%- include("../header"); %>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+    <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <%- include("../navbar"); %>
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <%- include("../sidebar"); %>
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content  flex-column-fluid " >
+                        <div id="kt_app_content_container" class="app-container  container-fluid ">
+                            <form id="kt_ecommerce_add_blog_form" class="form d-flex flex-column flex-lg-row" action="/admin/blogs/doUpdateBlog" method="post">
+                                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">                
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="required form-label">Title</label>
+                                                <input type="text" name="title" class="form-control mb-2" placeholder="Title" value="<%= blogData.title %>" />
+                                                <div class="text-muted fs-7">A blog title is required and recommended to be unique.</div>
+                                                <span id="titleErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Slug</label>
+                                                <input readonly id="slug" type="text" name="slug" class="form-control mb-2" placeholder="Slug" value="<%= blogData.slug %>" />
+                                                <div class="text-muted fs-7">A title slug is required and recommended to be unique.</div>
+                                                <span id="slugErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Category</label>
+                                                <select name="category" class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="false" data-placeholder="Edit">
+                                                    <option value="">Select Category</option>
+                                                    <% categories.forEach(category => { %>
+                                                        <option <%= category.slug == blogData.category.slug? 'selected':'' %> value="<%= category._id %>"><%= category.title %></option>
+                                                    <% }); %>
+                                                </select>
+                                                <span id="categoryErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label">Short Description</label>
+                                                <textarea name="shortDescription" class="form-control mb-2"><%= blogData.shortDescription %></textarea>
+                                                <span id="shortDescriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label">Description</label>
+                                                <!-- <div id="description" name="description" class="min-h-200px mb-2"><%- blogData.description -%></div> -->
+                                                <textarea name="description" cols="4" rows="4" class="form-control mb-2 description"><%- blogData.description -%></textarea>
+                                                <span id="descriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">                             
+                                                <label class="form-label">Credit</label>
+                                                <input type="text" class="form-control mb-2" name="credit" placeholder="Credit" value="<%= blogData.credit %>" />      
+                                                <span id="creditErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">                             
+                                                <label class="form-label required">Publish Date</label>
+                                                <input id="publishDate" type="date" class="form-control mb-2" name="publishDate" placeholder="Publish Date" value="<%= publishDate %>" max="<%= currentDate %>" />      
+                                                <span id="publishDateErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label row container-fluid required">Blog Image</label>
+                                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url('<%= blogImg %>')"></div>
+                                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Blog Image">
+                                                        <i class="ki-outline ki-pencil fs-7"></i>          
+                                                        <input id="blogImg" type="file" name="blogImg" accept=".png, .jpg, .jpeg"/>
+                                                        <input type="hidden" name="blogImg_remove"/>
+                                                    </label>
+
+                                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Blog Image">
+                                                        <i class="ki-outline ki-cross fs-2"></i>
+                                                    </span>
+                                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Blog Image">
+                                                        <i class="ki-outline ki-cross fs-2"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="form-text">Allowed file types:  png, jpg, jpeg.</div>
+                                                <span id="blogImgErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>Meta Options</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <div class="mb-10">                             
+                                                <label class="form-label">Meta Title</label>
+                                                <input type="text" class="form-control mb-2" name="metaTitle" placeholder="Meta title" value="<%= blogData.metaTitle %>" />      
+                                                <div class="text-muted fs-7">Set a meta tag title. Recommended to be simple and precise keywords.</div>
+                                                <span id="metaTitleErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            
+                                            <div class="mb-10">
+                                                <label class="form-label">Meta Description</label>
+                                                <!-- <div id="metaDescription" name="metaDescription" class="min-h-200px mb-2"><%- blogData.metaDescription -%></div> -->
+                                                <textarea name="metaDescription" cols="4" rows="4" class="form-control mb-2 description"><%- blogData.metaDescription -%></textarea>
+                                                <span id="metaDescriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+
+                                        <a href="/admin/blogs" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">
+                                            Cancel
+                                        </a>
+
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <input type="hidden" name="_id" value="<%= blogData._id %>">
+                                        
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="indicator-label">
+                                                Save Changes
+                                            </span>
+                                            <span class="indicator-progress">
+                                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>        
+                        </div>           
+                    </div>
+                </div>
+                <%- include("../sub_footer"); %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../footer"); %>

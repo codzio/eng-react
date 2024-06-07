@@ -1,0 +1,61 @@
+<%- include("../header"); %>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+    <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <%- include("../navbar"); %>
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <%- include("../sidebar"); %>
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content  flex-column-fluid " >
+                        <div id="kt_app_content_container" class="app-container  container-fluid ">
+                            <form id="kt_ecommerce_add_service_type_category_form" class="form d-flex flex-column flex-lg-row" action="/admin/service-type/doAddServiceType" method="post" enctype="multipart/form-data">
+                                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">                
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="required form-label">Service Name</label>
+                                                <input type="text" name="serviceName" class="form-control mb-2" placeholder="Service name" value="" />
+                                                <span id="serviceNameErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label row container-fluid required">Icon</label>
+                                                <input type="file" name="icon" class="form-control mb-2" accept=".png, .jpg, .jpeg">
+                                                <div class="form-text">Allowed file types: jpg, jpeg and png.</div>
+                                                <span id="iconErr" class="text-danger removeErr"></span>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+
+                                        <a href="/admin/service-type" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">
+                                            Cancel
+                                        </a>
+
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="indicator-label">
+                                                Save Changes
+                                            </span>
+                                            <span class="indicator-progress">
+                                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>        
+                        </div>           
+                    </div>
+                </div>
+                <%- include("../sub_footer"); %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../footer"); %>

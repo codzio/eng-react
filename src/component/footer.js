@@ -73,6 +73,7 @@ const Footer = (props) => {
                             <li><Link to="/career">Careers</Link></li>
                             <li><Link to="/blogs">Blogs</Link></li>
                             <li><Link to="/contact">Contact</Link></li>
+                            <li><Link to="/submit-application">Submit Resume</Link></li>
                             <li><Link onClick={refreshPage} to="/privacy-policy">Privacy Policy</Link></li>
                             <li><Link onClick={refreshPage} to="/terms-and-conditions">Terms & Conditions</Link></li>
                             </ul>

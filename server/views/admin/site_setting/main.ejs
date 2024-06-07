@@ -1,0 +1,374 @@
+<%- include("../header"); %>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+    <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <%- include("../navbar"); %>
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <%- include("../sidebar"); %>
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content  flex-column-fluid " >
+                        <div id="kt_app_content_container" class="app-container  container-fluid ">     
+                            <div class="card card-flush">                                    
+                                <div class="card-body">                                        
+                                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x border-transparent fs-4 fw-semibold mb-15">                   
+                                        <li class="nav-item">
+                                            <a class="nav-link text-active-primary d-flex align-items-center pb-5 active" data-bs-toggle="tab" href="settings.html#kt_ecommerce_settings_general">
+                                                <i class="ki-outline ki-home fs-2 me-2"></i>General
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link text-active-primary d-flex align-items-center pb-5" data-bs-toggle="tab" href="settings.html#kt_ecommerce_settings_store">
+                                                <i class="ki-outline ki-shop fs-2 me-2"></i>Custom CSS/JS
+                                            </a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link text-active-primary d-flex align-items-center pb-5" data-bs-toggle="tab" href="settings.html#kt_ecommerce_settings_localization">
+                                                <i class="ki-outline ki-compass fs-2 me-2"></i>Social Links
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="kt_ecommerce_settings_general" role="tabpanel">
+
+                                            <form id="kt_site_settings_general_form" class="form" enctype="multipart/form-data" action="/admin/doUpdateGeneralSettings" method="post">
+
+                                                <div class="row fv-row mb-7">
+                                                    <label class="col-md-3 text-md-end fs-6 fw-semibold form-label mt-3">
+                                                        <span class="required">Admin Logo</span>
+                                                    </label> 
+                                                    <div class="col-md-9">
+                                                        <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                            <div class="image-input-wrapper w-125px h-125px" style="background-image: url('<%= adminLogo %>')"></div>
+                                                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Admin Logo">
+                                                                <i class="ki-outline ki-pencil fs-7"></i>
+                                                                <input id="adminLogo" type="file" name="adminLogo" accept=".png, .jpg, .jpeg, .svg"/>
+                                                                <input type="hidden" name="adminLogo_remove"/>                
+                                                            </label>
+
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Admin Logo">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Admin Logo">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="form-text">Allowed file types:  png, jpg, jpeg.</div>
+                                                        <span id="adminLogoErr" class="text-danger removeErr"></span>
+                                                    </div>                                
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <label class="col-md-3 text-md-end fs-6 fw-semibold form-label mt-3">
+                                                        <span class="required">Website Logo</span>
+                                                    </label> 
+                                                    <div class="col-md-9">
+                                                        <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                            <div class="image-input-wrapper w-125px h-125px" style="background-image: url('<%= websiteLogo %>')"></div>
+                                                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Website Logo">
+                                                                <i class="ki-outline ki-pencil fs-7"></i>          
+                                                                <input id="websiteLogo" type="file" name="websiteLogo" accept=".png, .jpg, .jpeg, .svg"/>
+                                                                <input type="hidden" name="websiteLogo_remove"/>                
+                                                            </label>
+
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Website Logo">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Website Logo">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="form-text">Allowed file types:  png, jpg, jpeg.</div>
+                                                        <span id="websiteLogoErr" class="text-danger removeErr"></span>
+                                                    </div>                                
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <label class="col-md-3 text-md-end fs-6 fw-semibold form-label mt-3">
+                                                        <span class="required">Login Page Image</span>
+                                                    </label> 
+                                                    <div class="col-md-9">
+                                                        <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                            <div class="image-input-wrapper w-125px h-125px" style="background-image: url('<%= loginPageImg %>')"></div>
+                                                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Login Page Image">
+                                                                <i class="ki-outline ki-pencil fs-7"></i>          
+                                                                <input id="loginPageImg" type="file" name="loginPageImg" accept=".png, .jpg, .jpeg, .svg"/>
+                                                                <input type="hidden" name="loginPageImg_remove"/>                
+                                                            </label>
+
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Login Page Image">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Login Page Image">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="form-text">Allowed file types:  png, jpg, jpeg.</div>
+                                                        <span id="loginPageImgErr" class="text-danger removeErr"></span>
+                                                    </div>                                
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <label class="col-md-3 text-md-end fs-6 fw-semibold form-label mt-3">
+                                                        <span class="required">Favicon</span>
+                                                    </label> 
+                                                    <div class="col-md-9">
+                                                        <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                            <div class="image-input-wrapper w-125px h-125px" style="background-image: url('<%= favicon %>')"></div>
+                                                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Favicon">
+                                                                <i class="ki-outline ki-pencil fs-7"></i>          
+                                                                <input id="favicon" type="file" name="favicon" accept=".png, .jpg, .jpeg, .svg"/>
+                                                                <input type="hidden" name="favicon_remove"/>                
+                                                            </label>
+
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Favicon">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Favicon">
+                                                                <i class="ki-outline ki-cross fs-2"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="form-text">Allowed file types:  png, jpg, jpeg.</div>
+                                                        <span id="faviconErr" class="text-danger removeErr"></span>
+                                                    </div>                                
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="required">Website Name</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="websiteName" value="<%= (settingData)? settingData.websiteName:''; %>" />
+                                                        <span id="websiteNameErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="required">Website Email</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="websiteEmail" value="<%= (settingData)? settingData.websiteEmail:''; %>" />
+                                                        <span id="websiteEmailErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Website Phone Number</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="websitePhoneNum" value="<%= (settingData)? settingData.websitePhone:''; %>" />
+                                                        <span id="websitePhoneNumErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Website Address</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="websiteAddress" value="<%= (settingData)? settingData.websiteAddress:''; %>" />
+                                                        <span id="websiteAddressErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Footer Description</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <textarea rows="4" cols="4" class="form-control form-control-solid" name="footerDescription"><%= (settingData)? settingData.footerDescription:''; %></textarea>
+                                                        <span id="footerDescriptionErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="required">Copyright</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="websiteCopyright" value="<%= (settingData)? settingData.copyright:''; %>" />
+                                                        <span id="websiteCopyrightErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row py-5">
+                                                    <div class="col-md-9 offset-md-3">
+                                                        <div class="d-flex">
+                                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                            <input type="hidden" name="_id" value="<%= (settingData)? settingData._id:''; %>">
+                                                            <button type="submit" class="btn btn-primary  me-2 px-6">
+                                                                <span class="indicator-label">Update Settings</span>
+                                                                <span class="indicator-progress">
+                                                                    Please wait...<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                                </span>
+                                                            </button>                           
+                                                        </div>
+                                                    </div>
+                                                </div>                                    
+                                            </form>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="kt_ecommerce_settings_store" role="tabpanel">
+                                            <form id="kt_site_settings_general_custom" class="form" enctype="multipart/form-data" action="/admin/doUpdateCustomSettings" method="post">
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Header Scripts</span>
+                                                            <span class="ms-1"  data-bs-toggle="tooltip" title="Add Header Scripts">
+                                                                <i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <textarea cols="12" rows="12" class="form-control form-control-solid" name="headerScripts"><%= settingData.scripts.header %></textarea>
+                                                        <span id="headerScriptsErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Footer Scripts</span>
+                                                            <span class="ms-1"  data-bs-toggle="tooltip" title="Add Footer Scripts">
+                                                                <i class="ki-outline ki-information-5 text-gray-500 fs-6"></i>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <textarea cols="12" rows="12" class="form-control form-control-solid" name="footerScripts"><%= settingData.scripts.footer %></textarea>
+                                                        <span id="footerScriptsErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row py-5">
+                                                    <div class="col-md-9 offset-md-3">
+                                                        <div class="d-flex">                                    
+                                                            <button type="submit" class="btn btn-primary">
+                                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                                <input type="hidden" name="_id" value="<%= (settingData)? settingData._id:''; %>">
+                                                                <span class="indicator-label">
+                                                                    Update Settings
+                                                                </span>
+                                                                <span class="indicator-progress">
+                                                                    Please wait... 
+                                                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                                </span>
+                                                            </button>                                    
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="kt_ecommerce_settings_localization" role="tabpanel">
+                                            
+                                            <form id="kt_site_settings_social_form" class="form" enctype="multipart/form-data" action="/admin/doUpdateSocialSettings" method="post">
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Facebook</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="facebook" value="<%= settingData.socialLinks.facebook %>" />
+                                                        <span id="facebookErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Twitter</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="twitter" value="<%= settingData.socialLinks.twitter %>" />
+                                                        <span id="twitterErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">Instagram</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="instagram" value="<%= settingData.socialLinks.instagram %>" />
+                                                        <span id="instagramErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">YouTube</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="youtube" value="<%= settingData.socialLinks.youtube %>" />
+                                                        <span id="youtubeErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row fv-row mb-7">
+                                                    <div class="col-md-3 text-md-end">              
+                                                        <label class="fs-6 fw-semibold form-label mt-3">
+                                                            <span class="">LinkedIn</span>
+                                                        </label>                                  
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control form-control-solid" name="linkedin" value="<%= settingData.socialLinks.linkedin %>" />
+                                                        <span id="linkedinErr" class="removeErr text-danger"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row py-5">
+                                                    <div class="col-md-9 offset-md-3">
+                                                        <div class="d-flex">
+                                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                            <input type="hidden" name="_id" value="<%= (settingData)? settingData._id:''; %>">
+                                                            <button type="submit" class="btn btn-primary  me-2 px-6">
+                                                                <span class="indicator-label">Update Settings</span>
+                                                                <span class="indicator-progress">
+                                                                    Please wait...<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                                </span>
+                                                            </button>                           
+                                                        </div>
+                                                    </div>
+                                                </div>                                    
+                                            </form>
+
+                                        </div>
+                                    </div>        
+                                </div>                                                  
+                            </div>
+                        </div>           
+                    </div>
+                </div>
+                <%- include("../sub_footer"); %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../footer"); %>

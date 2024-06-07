@@ -14,6 +14,8 @@ import SingleProduct from "./pages/product-single";
 import BlogMain from "./pages/blogs";
 import BlogSingle from "./pages/blog-single";
 import CategoryDetail from "./pages/category";
+import AnnualReport from "./pages/annual-report";
+import Videos from "./pages/videos";
 
 const AppRouter = () => {
     useEffect(() => {
@@ -47,6 +49,8 @@ const AppRouter = () => {
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/projects" element={<UseCases />} />
                 {/* <Route path="/products/*" element={<ProductMain />} /> */}
+                <Route path="/annual-report" element={<AnnualReport />} />
+                <Route path="/videos" element={<Videos />} />
                 <Route path="/products/:productSlug" element={<SingleProduct />} />
                 <Route path="/blogs/*" element={<BlogMain />} />
                 <Route path="/blogs/:blogSlug" element={<BlogSingle />} />

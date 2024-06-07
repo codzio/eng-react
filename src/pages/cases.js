@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import OtherBanner from "../component/other-banner";
+//import OtherBanner from "../component/other-banner";
 import Layout from "../component/layout";
 import CasesProductOptions from "../component/cases-product-options";
 import ProjectProductList from '../component/project-product-list';
@@ -8,8 +8,8 @@ import PreLoader from "../component/preloader";
 import { useParams } from "react-router-dom";
 
 const Cases = () => {
-    const bannerImg = 'images/banner1.png';
-    const bannerTitle = "Use Cases";
+    //const bannerImg = 'images/banner1.png';
+    //const bannerTitle = "Use Cases";
     const [pageTitle, setPageTitle] = useState('Enggenv Solutions | Use Cases');
 
     const metaDescription = '';

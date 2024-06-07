@@ -1,0 +1,81 @@
+<%- include("../header"); %>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+    <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <%- include("../navbar"); %>
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <%- include("../sidebar"); %>
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content  flex-column-fluid " >
+                        <div id="kt_app_content_container" class="app-container  container-fluid ">
+                            <form id="kt_ecommerce_add_product_category_form" class="form d-flex flex-column flex-lg-row" action="/admin/product-subcategory/doUpdateCategory" method="post">
+                                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0"> 
+                                            
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Category</label>
+                                                <select name="category" class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="false" data-placeholder="Select Category">
+                                                    <% 
+                                                        categories.forEach(category => { 
+                                                            let isSel = "";
+                                                            if(categoryData.prodCategory.toString() == category._id.toString()) {
+                                                                isSel = "selected";
+                                                            }
+                                                    %>
+                                                        <option <%= isSel %> value="<%= category._id %>"><%= category.title %></option>
+                                                    <% }); %>
+                                                </select>
+                                                <span id="categoryErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="required form-label">Sub Category Name</label>
+                                                <input type="text" name="subcategoryName" class="form-control mb-2" placeholder="Sub Category name" value="<%= categoryData.title %>" />
+                                                <div class="text-muted fs-7">A sub category name is required and recommended to be unique.</div>
+                                                <span id="subcategoryNameErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Sub Category Slug</label>
+                                                <input readonly id="subcategorySlug" type="text" name="subcategorySlug" class="form-control mb-2" placeholder="Sub Category Slug" value="<%= categoryData.slug %>" />
+                                                <div class="text-muted fs-7">A sub category slug is required and recommended to be unique.</div>
+                                                <span id="subcategorySlugErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="form-label">Description</label>
+                                                <textarea rows="5" cols="5" name="description" class="form-control mb-2" placeholder="Description"><%= categoryData.description %></textarea>
+                                                <span id="descriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <input type="hidden" name="_id" value="<%= categoryData._id %>">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="indicator-label">
+                                                Save Changes
+                                            </span>
+                                            <span class="indicator-progress">
+                                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>        
+                        </div>           
+                    </div>
+                </div>
+                <%- include("../sub_footer"); %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../footer"); %>

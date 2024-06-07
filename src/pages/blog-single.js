@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import OtherBanner from "../component/other-banner";
+//import OtherBanner from "../component/other-banner";
 import BlogDetail from "../component/blog-detail";
 import PreLoader from "../component/preloader";
 import { useParams, useNavigate } from "react-router-dom";
@@ -7,9 +7,9 @@ import Layout from "../component/layout";
 
 const BlogSingle = () => {
     const navigate = useNavigate();
-    const bannerImg = "../images/banner1.png";
-    const bannerPattern = "../images/other_banner_pattern.png";
-    const bannerTitle = "Our Blogs";
+    // const bannerImg = "../images/banner1.png";
+    // const bannerPattern = "../images/other_banner_pattern.png";
+    // const bannerTitle = "Our Blogs";
     const [blog, setBlog] = useState(null);
     const { blogSlug } = useParams();
     const [pageTitle, setPageTitle] = useState('Enggenv Solutions');

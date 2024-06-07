@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Layout from "../component/layout";
 import PreLoader from "../component/preloader";
 
-const OtherBanner = lazy(() => import("../component/other-banner"));
+//const OtherBanner = lazy(() => import("../component/other-banner"));
 const QualityProductsonMarket = lazy(() => import("../component/quality-products-on-market"));
 const ProductCategoriesComp = lazy(() => import("../component/product-categories-comp"));
 const ProductSubCategoriesComp = lazy(() => import("../component/product-sub-categories-comp"));

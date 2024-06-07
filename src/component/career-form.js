@@ -1,26 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../styles/Home.css';
 
-const CareerForm = (jobData) => {
-
-    const defTitle = jobData.params.title || '';
-    const defDepartment = jobData.params.department || 'DEFAULT';
-
+const CareerForm = ({ params }) => {
     const [formData, setFormData] = useState({
-        profile: defDepartment,
-        title: defTitle,
+        profile: params?.department || 'DEFAULT',
+        title: params?.title || '',
         firstName: '',
         lastName: '',
         email: '',
         phoneNumber: '',
         message: '',
-        resume: null, 
+        resume: null,
     });
+
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [requiredError, setRequiredError] = useState('');
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        setFormData((prevData) => ({
+            ...prevData,
+            profile: params?.department || 'DEFAULT',
+            title: params?.title || ''
+        }));
+    }, [params]);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -66,8 +71,8 @@ const CareerForm = (jobData) => {
             if (response.ok) {
                 fileInputRef.current.value = '';
                 setFormData({
-                    title: defTitle,
-                    profile: defDepartment,
+                    profile: params?.department || 'DEFAULT',
+                    title: params?.title || '',
                     firstName: '',
                     lastName: '',
                     email: '',
@@ -155,7 +160,7 @@ const CareerForm = (jobData) => {
                         {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                         {requiredError && <p style={{ color: 'red' }}>{requiredError}</p>}
-                        <button className="contact_form_btn" type="submit" disabled={loading}>{loading ? 'Loading...' : 'Submit Now'}</button>
+                        <button className="contact_form_btn" type="submit" disabled={loading}>{loading ? 'Please Wait...' : 'Submit Now'}</button>
                     </form>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import OtherBanner from '../component/other-banner';
+//import OtherBanner from '../component/other-banner';
 import BlogListing from '../component/blog-listing';
 import Layout from '../component/layout';
 import PreLoader from "../component/preloader";
@@ -7,8 +7,8 @@ import { useLocation } from 'react-router-dom';
 // import Pagination from '../component/pagination';
 
 const BlogMain = () => {
-    const bannerImg = "images/banner1.png";
-    const bannerTitle = "Our Blogs";
+    // const bannerImg = "images/banner1.png";
+    // const bannerTitle = "Our Blogs";
     const [loadedData, setLoadedData] = useState({ totalBlogs: 0, blogs: []});
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -68,13 +68,13 @@ const BlogMain = () => {
     // console.log(loadedData.totalBlogs);
 
     // Loader component
-    const Loader = () => {
-        return (
-            <div className="loader">
-                <p>Loading...</p>
-            </div>
-        );
-    };
+    // const Loader = () => {
+    //     return (
+    //         <div className="loader">
+    //             <p>Loading...</p>
+    //         </div>
+    //     );
+    // };
 
     return (
         <Layout hasBanner="false" pageTitle={pageTitle} metaData={metaData}>

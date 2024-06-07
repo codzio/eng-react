@@ -1,0 +1,10 @@
+{
+  "env": {
+    "MONGO_USER": "alfaizm19",
+    "MONGO_PASSWORD": "HNLGLhL7iX9WiD8K",
+    "MONGO_DATABASE": "eng",
+    "PORT": 8000,
+    "SITE_URL": "http://localhost:8000/",
+    "SITE_URL_NEW": "http://localhost:8000/"
+  }
+}

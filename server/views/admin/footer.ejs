@@ -1,0 +1,2858 @@
+<div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
+<i class="ki-outline ki-arrow-up"></i>
+</div>
+
+<!--begin::Javascript-->
+<script>
+	var hostUrl = "/metronic8/demo38/assets/";
+</script>
+
+<!--begin::Global Javascript Bundle(mandatory for all pages)-->
+<script src="/plugins/global/plugins.bundle.js"></script>
+<script src="/js/scripts.bundle.js"></script>
+<script type="text/javascript">
+    function slugify(el, id) {
+        slug = $(el).val()
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special characters
+            .replace(/[\s_-]+/g, '-') // Convert spaces and underscores to dashes
+            .replace(/^-+|-+$/g, ''); // Remove leading/trailing dashes
+        $("#"+id).val(slug);
+    }
+</script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.7.3/ckeditor.js"></script>
+<script>
+    ckeditor = $('.description');
+    $.each(ckeditor,function(i,e) {
+      var el_id = $(e).attr('id');
+      CKEDITOR.replace(el_id,{ filebrowserUploadUrl : '/upload'});
+      CKEDITOR.config.allowedContent = true;
+    })
+</script> -->
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+<script>
+    const editorElements = document.querySelectorAll('.description');
+    const editors = [];
+
+    editorElements.forEach((element, index) => {
+        let getName = $(element).attr('name');
+        ClassicEditor
+            .create(element)
+            .then(editor => {
+                // Configure and interact with each editor here
+                editors[getName] = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script> -->
+
+<script src="https://cdn.tiny.cloud/1/r22x6ervjq57zyw7ir7bmn1t7vbuoo2t419ium62xoeakdul/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+  selector: 'textarea.description',
+  extended_valid_elements: 'span',
+  plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount code',
+  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | code',
+  tinycomments_mode: 'embedded',
+  tinycomments_author: 'Author name',
+  // mergetags_list: [
+  //   { value: 'First.Name', title: 'First Name' },
+  //   { value: 'Email', title: 'Email' },
+  // ],
+  ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant"))
+});
+</script>
+
+<!--end::Global Javascript Bundle-->
+
+	<% if(currentMenu == 'dashboard') { %>
+	<script src="/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/continentsLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
+	<script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+	<script src="/js/widgets.bundle.js"></script>
+	<script src="/js/custom/widgets.js"></script>
+	<% } %>
+	
+	<% if(currentMenu == 'account-settings') { %>
+	<script src="/js/custom/account/settings/signin-methods.js"></script>
+	<script type="text/javascript">
+		$("#kt_account_profile_details_form").submit(function(event) {
+			event.preventDefault();
+
+			url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_account_profile_details_form .removeErr").html('');
+                    $("#kt_account_profile_details_form .indicator-label").hide();
+                    $("#kt_account_profile_details_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_account_profile_details_form .indicator-label").show();
+                    $("#kt_account_profile_details_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_account_profile_details_form .indicator-label").show();
+                    $("#kt_account_profile_details_form .indicator-progress").hide();
+
+                }
+            });
+
+		});
+
+		$("#kt_signin_change_email").submit(function(event) {
+			event.preventDefault();
+
+			url = $(this).attr('action');
+            //formData = new FormData(this)
+            formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                beforeSend: function() {
+                    $("#kt_signin_change_email .removeErr").html('');
+                    $("#kt_signin_change_email .indicator-label").hide();
+                    $("#kt_signin_change_email .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_signin_change_email .indicator-label").show();
+                    $("#kt_signin_change_email .indicator-progress").hide();
+                    $("#kt_signin_cancel").click();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_signin_change_email .indicator-label").show();
+                    $("#kt_signin_change_email .indicator-progress").hide();
+
+                }
+            });
+
+		});
+
+		$("#kt_signin_change_password").submit(function(event) {
+			event.preventDefault();
+
+			url = $(this).attr('action');
+            //formData = new FormData(this)
+            formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                beforeSend: function() {
+                    $("#kt_signin_change_password .removeErr").html('');
+                    $("#kt_signin_change_password .indicator-label").hide();
+                    $("#kt_signin_change_password .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_signin_change_password .indicator-label").show();
+                    $("#kt_signin_change_password .indicator-progress").hide();
+                    $("#kt_password_cancel").click();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_signin_change_password .indicator-label").show();
+                    $("#kt_signin_change_password .indicator-progress").hide();
+
+                }
+            });
+
+		});
+	</script>
+	<% } %>
+
+    <% if(currentMenu == 'site-settings') { %>
+    <script type="text/javascript">
+        $("#kt_site_settings_general_form").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_site_settings_general_form .removeErr").html('');
+                    $("#kt_site_settings_general_form .indicator-label").hide();
+                    $("#kt_site_settings_general_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_site_settings_general_form .indicator-label").show();
+                    $("#kt_site_settings_general_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_site_settings_general_form .indicator-label").show();
+                    $("#kt_site_settings_general_form .indicator-progress").hide();
+
+                }
+            });
+
+        });
+
+        $("#kt_site_settings_general_custom").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            //formData = new FormData(this)
+            formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                // processData:false,
+                // contentType: false,
+                // cache: false,
+                beforeSend: function() {
+                    $("#kt_site_settings_general_custom .removeErr").html('');
+                    $("#kt_site_settings_general_custom .indicator-label").hide();
+                    $("#kt_site_settings_general_custom .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_site_settings_general_custom .indicator-label").show();
+                    $("#kt_site_settings_general_custom .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_site_settings_general_custom .indicator-label").show();
+                    $("#kt_site_settings_general_custom .indicator-progress").hide();
+
+                }
+            });
+
+        });
+
+        $("#kt_site_settings_social_form").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            //formData = new FormData(this)
+            formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                // processData:false,
+                // contentType: false,
+                // cache: false,
+                beforeSend: function() {
+                    $("#kt_site_settings_social_form .removeErr").html('');
+                    $("#kt_site_settings_social_form .indicator-label").hide();
+                    $("#kt_site_settings_social_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_site_settings_social_form .indicator-label").show();
+                    $("#kt_site_settings_social_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_site_settings_social_form .indicator-label").show();
+                    $("#kt_site_settings_social_form .indicator-progress").hide();
+
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'category' || currentMenu == 'product-category') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/categories.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-category.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_category_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            //formData = new FormData(this)
+            formData = $(this).serialize();
+
+            //getDescription = editors['description'].getData();
+            //getMetaDescription = editors['metaDescription'].getData();
+
+            // let quillDesc = new Quill('#description');
+            // let quillMetaDesc = new Quill('#metaDescription');
+
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+            // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+            // formData = formData+"&description="+description+"&metaDescription="+metaDescription;
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                // processData:false,
+                // contentType: false,
+                // cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_category_form .removeErr").html('');
+                    $("#kt_ecommerce_add_category_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_category_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_category_form")[0].reset();
+                    $("#kt_ecommerce_add_category_form .indicator-label").show();
+                    $("#kt_ecommerce_add_category_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_category_form .indicator-label").show();
+                    $("#kt_ecommerce_add_category_form .indicator-progress").hide();
+                }
+            });
+
+        });
+
+        $("#kt_ecommerce_add_product_category_form").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_product_category_form .removeErr").html('');
+                    $("#kt_ecommerce_add_product_category_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_product_category_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_product_category_form")[0].reset();
+                    $("#kt_ecommerce_add_product_category_form .indicator-label").show();
+                    $("#kt_ecommerce_add_product_category_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_product_category_form .indicator-label").show();
+                    $("#kt_ecommerce_add_product_category_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'product-subcategory') { %>
+        <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/subcategories.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/save-subcategory.js"></script>    
+        <script type="text/javascript">
+            $("#kt_ecommerce_add_product_category_form").submit(function(event) {
+                event.preventDefault();
+    
+                tinymce.triggerSave();
+    
+                url = $(this).attr('action');
+                //formData = new FormData(this)
+                formData = $(this).serialize();
+    
+                //getDescription = editors['description'].getData();
+                //getMetaDescription = editors['metaDescription'].getData();
+    
+                // let quillDesc = new Quill('#description');
+                // let quillMetaDesc = new Quill('#metaDescription');
+    
+                // let description = quillDesc.editor.scroll.domNode.innerHTML;
+                // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+                // formData = formData+"&description="+description+"&metaDescription="+metaDescription;
+    
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    dataType: "json",
+                    // processData:false,
+                    // contentType: false,
+                    // cache: false,
+                    beforeSend: function() {
+                        $("#kt_ecommerce_add_product_category_form .removeErr").html('');
+                        $("#kt_ecommerce_add_product_category_form .indicator-label").hide();
+                        $("#kt_ecommerce_add_product_category_form .indicator-progress").show();
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        Swal.fire({ 
+                            text: succRes.msg, 
+                            icon: "success", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-success" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        }).then(function() {
+                          location.reload();
+                        });
+    
+                        $("#kt_ecommerce_add_product_category_form")[0].reset();
+                        $("#kt_ecommerce_add_product_category_form .indicator-label").show();
+                        $("#kt_ecommerce_add_product_category_form .indicator-progress").hide();
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        if (errResp.eType == 'field') {
+                            //field error
+                            $.each(errResp.errors, function(index, field) {
+                                if (field.param == '_csrf') {
+                                    alert(field.msg);
+                                } else {
+                                    $(`#${field.param}Err`).html(field.msg);
+                                }
+                            });
+                        } else {
+                            //final error
+                            Swal.fire({ 
+                                text: errResp.msg, 
+                                icon: "error", 
+                                buttonsStyling: !1, 
+                                confirmButtonText: "Ok, got it!", 
+                                customClass: { confirmButton: "btn btn-danger" },
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                // position: 'top-end',
+                                timer: 2500,
+                                timerProgressBar: true,
+                            });
+                        }
+    
+                        $("#kt_ecommerce_add_product_category_form .indicator-label").show();
+                        $("#kt_ecommerce_add_product_category_form .indicator-progress").hide();
+                    }
+                });
+            });
+        </script>
+        <% } %>
+
+    <% if(currentMenu == 'blogs') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/blogs.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-blogs.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_blog_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            //getDescription = editors['description'].getData();
+            //getMetaDescription = editors['metaDescription'].getData();
+
+            // let quillDesc = new Quill('#description');
+            // let quillMetaDesc = new Quill('#metaDescription');
+
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+            // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+
+            // formData.append('description', description);
+            // formData.append('metaDescription', metaDescription);
+
+            //formData = formData+"&description="+description+"&metaDescription="+metaDescription;
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_blog_form .removeErr").html('');
+                    $("#kt_ecommerce_add_blog_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_blog_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_blog_form")[0].reset();
+                    $("#kt_ecommerce_add_blog_form .indicator-label").show();
+                    $("#kt_ecommerce_add_blog_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_blog_form .indicator-label").show();
+                    $("#kt_ecommerce_add_blog_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'banner') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/banner.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-banner.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_banner_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            //getDescription = editors['description'].getData();
+
+            // let quillDesc = new Quill('#description');
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+            //formData.append('description', getDescription);
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_banner_form .removeErr").html('');
+                    $("#kt_ecommerce_add_banner_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_banner_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_banner_form")[0].reset();
+                    $("#kt_ecommerce_add_banner_form .indicator-label").show();
+                    $("#kt_ecommerce_add_banner_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_banner_form .indicator-label").show();
+                    $("#kt_ecommerce_add_banner_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'client') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/client.js"></script>
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_client_form").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_client_form .removeErr").html('');
+                    $("#kt_ecommerce_add_client_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_client_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_client_form")[0].reset();
+                    $("#kt_ecommerce_add_client_form .indicator-label").show();
+                    $("#kt_ecommerce_add_client_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_client_form .indicator-label").show();
+                    $("#kt_ecommerce_add_client_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'certificate') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/certificate.js"></script>
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_certificate_form").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_certificate_form .removeErr").html('');
+                    $("#kt_ecommerce_add_certificate_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_certificate_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_certificate_form")[0].reset();
+                    $("#kt_ecommerce_add_certificate_form .indicator-label").show();
+                    $("#kt_ecommerce_add_certificate_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_certificate_form .indicator-label").show();
+                    $("#kt_ecommerce_add_certificate_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'why') { %>
+        <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/why.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/save-why.js"></script> 
+        <script type="text/javascript">
+            $("#kt_ecommerce_add_why_form").submit(function(event) {
+                event.preventDefault();
+
+                tinymce.triggerSave();
+
+                url = $(this).attr('action');
+                formData = new FormData(this)
+                //formData = $(this).serialize();
+
+                // let quillDesc = new Quill('#description');
+
+                // let description = quillDesc.editor.scroll.domNode.innerHTML;
+
+                // formData.append('description', description);
+
+                //getDescription = editors['description'].getData();
+
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    dataType: "json",
+                    processData:false,
+                    contentType: false,
+                    cache: false,
+                    beforeSend: function() {
+                        $("#kt_ecommerce_add_why_form .removeErr").html('');
+                        $("#kt_ecommerce_add_why_form .indicator-label").hide();
+                        $("#kt_ecommerce_add_why_form .indicator-progress").show();
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        Swal.fire({ 
+                            text: succRes.msg, 
+                            icon: "success", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-success" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        }).then(function() {
+                          location.reload();
+                        });
+
+                        $("#kt_ecommerce_add_why_form")[0].reset();
+                        $("#kt_ecommerce_add_why_form .indicator-label").show();
+                        $("#kt_ecommerce_add_why_form .indicator-progress").hide();
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        if (errResp.eType == 'field') {
+                            //field error
+                            $.each(errResp.errors, function(index, field) {
+                                if (field.param == '_csrf') {
+                                    alert(field.msg);
+                                } else {
+                                    $(`#${field.param}Err`).html(field.msg);
+                                }
+                            });
+                        } else {
+                            //final error
+                            Swal.fire({ 
+                                text: errResp.msg, 
+                                icon: "error", 
+                                buttonsStyling: !1, 
+                                confirmButtonText: "Ok, got it!", 
+                                customClass: { confirmButton: "btn btn-danger" },
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                // position: 'top-end',
+                                timer: 2500,
+                                timerProgressBar: true,
+                            });
+                        }
+
+                        $("#kt_ecommerce_add_why_form .indicator-label").show();
+                        $("#kt_ecommerce_add_why_form .indicator-progress").hide();
+                    }
+                });
+
+            });
+        </script>
+    <% } %>
+
+    <% if(currentMenu == 'event') { %>
+        <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/event.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/save-event.js"></script>    
+        <script type="text/javascript">
+            $("#kt_ecommerce_add_event_form").submit(function(event) {
+                event.preventDefault();
+
+                tinymce.triggerSave();
+
+                url = $(this).attr('action');
+                formData = new FormData(this)
+                //formData = $(this).serialize();
+
+                // let quillDesc = new Quill('#description');
+
+                // let description = quillDesc.editor.scroll.domNode.innerHTML;
+
+                // formData.append('description', description);
+
+                //getDescription = editors['description'].getData();
+
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    dataType: "json",
+                    processData:false,
+                    contentType: false,
+                    cache: false,
+                    beforeSend: function() {
+                        $("#kt_ecommerce_add_event_form .removeErr").html('');
+                        $("#kt_ecommerce_add_event_form .indicator-label").hide();
+                        $("#kt_ecommerce_add_event_form .indicator-progress").show();
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        Swal.fire({ 
+                            text: succRes.msg, 
+                            icon: "success", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-success" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        }).then(function() {
+                          location.reload();
+                        });
+
+                        $("#kt_ecommerce_add_event_form")[0].reset();
+                        $("#kt_ecommerce_add_event_form .indicator-label").show();
+                        $("#kt_ecommerce_add_event_form .indicator-progress").hide();
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        if (errResp.eType == 'field') {
+                            //field error
+                            $.each(errResp.errors, function(index, field) {
+                                if (field.param == '_csrf') {
+                                    alert(field.msg);
+                                } else {
+                                    $(`#${field.param}Err`).html(field.msg);
+                                }
+                            });
+                        } else {
+                            //final error
+                            Swal.fire({ 
+                                text: errResp.msg, 
+                                icon: "error", 
+                                buttonsStyling: !1, 
+                                confirmButtonText: "Ok, got it!", 
+                                customClass: { confirmButton: "btn btn-danger" },
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                // position: 'top-end',
+                                timer: 2500,
+                                timerProgressBar: true,
+                            });
+                        }
+
+                        $("#kt_ecommerce_add_event_form .indicator-label").show();
+                        $("#kt_ecommerce_add_event_form .indicator-progress").hide();
+                    }
+                });
+
+            });
+        </script>
+    <% } %>
+
+    <% if(currentMenu == 'product-features') { %>
+        <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/product-feature.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/save-product-feature.js"></script>    
+        <script type="text/javascript">
+            $("#kt_ecommerce_add_product_feature_form").submit(function(event) {
+                event.preventDefault();
+
+                url = $(this).attr('action');
+                formData = new FormData(this)
+                //formData = $(this).serialize();
+
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    dataType: "json",
+                    processData:false,
+                    contentType: false,
+                    cache: false,
+                    beforeSend: function() {
+                        $("#kt_ecommerce_add_product_feature_form .removeErr").html('');
+                        $("#kt_ecommerce_add_product_feature_form .indicator-label").hide();
+                        $("#kt_ecommerce_add_product_feature_form .indicator-progress").show();
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        Swal.fire({ 
+                            text: succRes.msg, 
+                            icon: "success", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-success" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        }).then(function() {
+                          location.reload();
+                        });
+
+                        $("#kt_ecommerce_add_product_feature_form")[0].reset();
+                        $("#kt_ecommerce_add_product_feature_form .indicator-label").show();
+                        $("#kt_ecommerce_add_product_feature_form .indicator-progress").hide();
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        if (errResp.eType == 'field') {
+                            //field error
+                            $.each(errResp.errors, function(index, field) {
+                                if (field.param == '_csrf') {
+                                    alert(field.msg);
+                                } else {
+                                    $(`#${field.param}Err`).html(field.msg);
+                                }
+                            });
+                        } else {
+                            //final error
+                            Swal.fire({ 
+                                text: errResp.msg, 
+                                icon: "error", 
+                                buttonsStyling: !1, 
+                                confirmButtonText: "Ok, got it!", 
+                                customClass: { confirmButton: "btn btn-danger" },
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                // position: 'top-end',
+                                timer: 2500,
+                                timerProgressBar: true,
+                            });
+                        }
+
+                        $("#kt_ecommerce_add_product_feature_form .indicator-label").show();
+                        $("#kt_ecommerce_add_product_feature_form .indicator-progress").hide();
+                    }
+                });
+
+            });
+        </script>
+    <% } %>
+
+    <% if(currentMenu == 'faq') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/faq.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-faq.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_faq_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            //formData = new FormData(this)
+
+            // let quillDesc = new Quill('#description');
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+
+            //getDescription = editors['description'].getData();
+
+            formData = $(this).serialize();
+
+            //formData.append('description', description);
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                // processData:false,
+                // contentType: false,
+                // cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_faq_form .removeErr").html('');
+                    $("#kt_ecommerce_add_faq_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_faq_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_faq_form")[0].reset();
+                    $("#kt_ecommerce_add_faq_form .indicator-label").show();
+                    $("#kt_ecommerce_add_faq_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_faq_form .indicator-label").show();
+                    $("#kt_ecommerce_add_faq_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'testimonial') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/testimonial.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-testimonial.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_testimonial_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            //formData = new FormData(this)
+
+            // let quillDesc = new Quill('#description');
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+
+            //getDescription = editors['review'].getData();
+
+            // formData = $(this).serialize()+"&review="+description;            
+            formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_testimonial_form .removeErr").html('');
+                    $("#kt_ecommerce_add_testimonial_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_testimonial_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_testimonial_form")[0].reset();
+                    $("#kt_ecommerce_add_testimonial_form .indicator-label").show();
+                    $("#kt_ecommerce_add_testimonial_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_testimonial_form .indicator-label").show();
+                    $("#kt_ecommerce_add_testimonial_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'service-type') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/service-type.js"></script>
+    <script type="text/javascript">
+        // $("#kt_ecommerce_add_service_type_category_form").submit(function(event) {
+        //     event.preventDefault();
+
+        //     url = $(this).attr('action');
+        //     //formData = new FormData(this)
+        //     formData = $(this).serialize();
+
+        //     $.ajax({
+        //         type: "post",
+        //         url: url,
+        //         data: formData,
+        //         dataType: "json",
+        //         // processData:false,
+        //         // contentType: false,
+        //         // cache: false,
+        //         beforeSend: function() {
+        //             $("#kt_ecommerce_add_service_type_category_form .removeErr").html('');
+        //             $("#kt_ecommerce_add_service_type_category_form .indicator-label").hide();
+        //             $("#kt_ecommerce_add_service_type_category_form .indicator-progress").show();
+        //         },
+        //         success: function (succRes) {
+        //             // location.reload();
+        //             Swal.fire({ 
+        //                 text: succRes.msg, 
+        //                 icon: "success", 
+        //                 buttonsStyling: !1, 
+        //                 confirmButtonText: "Ok, got it!", 
+        //                 customClass: { confirmButton: "btn btn-success" },
+        //                 showCloseButton: false,
+        //                 showCancelButton: false,
+        //                 showConfirmButton: true,
+        //                 // position: 'top-end',
+        //                 timer: 2500,
+        //                 timerProgressBar: true,
+        //             }).then(function() {
+        //               location.reload();
+        //             });
+
+        //             $("#kt_ecommerce_add_service_type_category_form")[0].reset();
+        //             $("#kt_ecommerce_add_service_type_category_form .indicator-label").show();
+        //             $("#kt_ecommerce_add_service_type_category_form .indicator-progress").hide();
+        //         },
+        //         error: function (jqXHR, exception) {
+        //             errResp = jqXHR.responseJSON;
+                    
+        //             if (errResp.eType == 'field') {
+        //                 //field error
+        //                 $.each(errResp.errors, function(index, field) {
+        //                     if (field.param == '_csrf') {
+        //                         alert(field.msg);
+        //                     } else {
+        //                         $(`#${field.param}Err`).html(field.msg);
+        //                     }
+        //                 });
+        //             } else {
+        //                 //final error
+        //                 Swal.fire({ 
+        //                     text: errResp.msg, 
+        //                     icon: "error", 
+        //                     buttonsStyling: !1, 
+        //                     confirmButtonText: "Ok, got it!", 
+        //                     customClass: { confirmButton: "btn btn-danger" },
+        //                     showCloseButton: false,
+        //                     showCancelButton: false,
+        //                     showConfirmButton: true,
+        //                     // position: 'top-end',
+        //                     timer: 2500,
+        //                     timerProgressBar: true,
+        //                 });
+        //             }
+
+        //             $("#kt_ecommerce_add_service_type_category_form .indicator-label").show();
+        //             $("#kt_ecommerce_add_service_type_category_form .indicator-progress").hide();
+        //         }
+        //     });
+
+        // });
+
+        $("#kt_ecommerce_add_service_type_category_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_service_type_category_form .removeErr").html('');
+                    $("#kt_ecommerce_add_service_type_category_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_service_type_category_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_service_type_category_form")[0].reset();
+                    $("#kt_ecommerce_add_service_type_category_form .indicator-label").show();
+                    $("#kt_ecommerce_add_service_type_category_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_service_type_category_form .indicator-label").show();
+                    $("#kt_ecommerce_add_service_type_category_form .indicator-progress").hide();
+                }
+            });
+
+        });
+
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'use-cases') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/blogs.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-blogs.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_use_cases_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            //getDescription = editors['description'].getData();
+            //getMetaDescription = editors['metaDescription'].getData();
+
+            // let quillDesc = new Quill('#description');
+            // let quillMetaDesc = new Quill('#metaDescription');
+
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+            // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+
+            // formData.append('description', description);
+            // formData.append('metaDescription', metaDescription);
+
+            //formData = formData+"&description="+description+"&metaDescription="+metaDescription;
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_use_cases_form .removeErr").html('');
+                    $("#kt_ecommerce_add_use_cases_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_use_cases_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_use_cases_form")[0].reset();
+                    $("#kt_ecommerce_add_use_cases_form .indicator-label").show();
+                    $("#kt_ecommerce_add_use_cases_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_use_cases_form .indicator-label").show();
+                    $("#kt_ecommerce_add_use_cases_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'projects') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/projects.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-projects.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_project_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            //getDescription = editors['description'].getData();
+            //getMetaDescription = editors['metaDescription'].getData();
+
+            // let quillDesc = new Quill('#description');
+            // let quillMetaDesc = new Quill('#metaDescription');
+
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+            // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+
+            // formData.append('description', description);
+            // formData.append('metaDescription', metaDescription);
+
+            //formData = formData+"&description="+description+"&metaDescription="+metaDescription;
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_project_form .removeErr").html('');
+                    $("#kt_ecommerce_add_project_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_project_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_project_form")[0].reset();
+                    $("#kt_ecommerce_add_project_form .indicator-label").show();
+                    $("#kt_ecommerce_add_project_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_project_form .indicator-label").show();
+                    $("#kt_ecommerce_add_project_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'product') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/product.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-products.js"></script>    
+    <script type="text/javascript">
+        $("#category").change(function() {
+            var categoryId = $(this).val();
+            $.ajax({
+                url: '/admin/product/getSubCategory',
+                type: 'POST',
+                dataType: 'json',
+                data: {categoryId: categoryId},
+                beforeSend: function() {
+                    const select2Element = $('#subCategory');
+                    select2Element.empty();
+                },
+                success: function(res) {
+                    const select2Element = $('#subCategory');
+                    select2Element.empty();
+                    res.subcategory.forEach(function (item) {
+                        const option = new Option(item.title, item._id, false, false);
+                        select2Element.append(option);
+                    });
+
+                    select2Element.trigger('change');
+                }
+            })
+        })
+
+        $("#kt_ecommerce_add_product_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            //editors['description'].getData();
+            //editors['features'].getData();
+            //editors['techSpecification'].getData();
+            //editors['metaDescription'].getData();
+
+            // let quillDesc = new Quill('#description');
+            // let quillFeatures = new Quill('#features');
+            // let quillTechSpec = new Quill('#techSpecification');
+            // let quillMetaDesc = new Quill('#metaDescription');
+
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+            // let features = quillFeatures.editor.scroll.domNode.innerHTML;
+            // let techSpecification = quillTechSpec.editor.scroll.domNode.innerHTML;
+            // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+
+            // formData.append('description', description);
+            // formData.append('features', features);
+            // formData.append('techSpecification', techSpecification);
+            // formData.append('metaDescription', metaDescription);
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_product_form .removeErr").html('');
+                    $("#kt_ecommerce_add_product_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_product_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_product_form")[0].reset();
+                    $("#kt_ecommerce_add_product_form .indicator-label").show();
+                    $("#kt_ecommerce_add_product_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_product_form .indicator-label").show();
+                    $("#kt_ecommerce_add_product_form .indicator-progress").hide();
+                }
+            });
+
+        });
+
+        const removeAttachment = (el) => {
+            url = $(el).attr('data-url');
+            csrf = $(el).attr('data-csrf');
+            id = $(el).attr('data-id');
+            attachmentUrl = $(el).attr('data-attachment');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    attachmentUrl: attachmentUrl,
+                    csrf: csrf
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#addImgDiv_"+id).remove();
+
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    Swal.fire({ 
+                        text: errResp.msg, 
+                        icon: "error", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-danger" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    });
+
+                }
+            });
+            
+        }
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'video') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/video.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-video.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_video_form").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_video_form .removeErr").html('');
+                    $("#kt_ecommerce_add_video_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_video_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_video_form")[0].reset();
+                    $("#kt_ecommerce_add_video_form .indicator-label").show();
+                    $("#kt_ecommerce_add_video_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_video_form .indicator-label").show();
+                    $("#kt_ecommerce_add_video_form .indicator-progress").hide();
+                }
+            });
+
+        });
+
+        const removeAttachment = (el) => {
+            url = $(el).attr('data-url');
+            csrf = $(el).attr('data-csrf');
+            id = $(el).attr('data-id');
+            attachmentUrl = $(el).attr('data-attachment');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    attachmentUrl: attachmentUrl,
+                    csrf: csrf
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#addImgDiv_"+id).remove();
+
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    Swal.fire({ 
+                        text: errResp.msg, 
+                        icon: "error", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-danger" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    });
+
+                }
+            });
+            
+        }
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'annual-report') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/annual-report.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-annual-report.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_annual_report_form").submit(function(event) {
+            event.preventDefault();
+
+            url = $(this).attr('action');
+            formData = new FormData(this)
+            //formData = $(this).serialize();
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                processData:false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_annual_report_form .removeErr").html('');
+                    $("#kt_ecommerce_add_annual_report_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_annual_report_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_annual_report_form")[0].reset();
+                    $("#kt_ecommerce_add_annual_report_form .indicator-label").show();
+                    $("#kt_ecommerce_add_annual_report_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_annual_report_form .indicator-label").show();
+                    $("#kt_ecommerce_add_annual_report_form .indicator-progress").hide();
+                }
+            });
+
+        });
+
+        const removeAttachment = (el) => {
+            url = $(el).attr('data-url');
+            csrf = $(el).attr('data-csrf');
+            id = $(el).attr('data-id');
+            attachmentUrl = $(el).attr('data-attachment');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: id,
+                    attachmentUrl: attachmentUrl,
+                    csrf: csrf
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#addImgDiv_"+id).remove();
+
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    Swal.fire({ 
+                        text: errResp.msg, 
+                        icon: "error", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-danger" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    });
+
+                }
+            });
+            
+        }
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'job') { %>
+        <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/job.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/save-jobs.js"></script>    
+        <script type="text/javascript">    
+            $("#kt_ecommerce_add_job_form").submit(function(event) {
+                event.preventDefault();
+    
+                tinymce.triggerSave();
+    
+                url = $(this).attr('action');
+                //formData = new FormData(this)
+                formData = $(this).serialize();
+    
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    dataType: "json",
+                    beforeSend: function() {
+                        $("#kt_ecommerce_add_job_form .removeErr").html('');
+                        $("#kt_ecommerce_add_job_form .indicator-label").hide();
+                        $("#kt_ecommerce_add_job_form .indicator-progress").show();
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        Swal.fire({ 
+                            text: succRes.msg, 
+                            icon: "success", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-success" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        }).then(function() {
+                          location.reload();
+                        });
+    
+                        $("#kt_ecommerce_add_job_form")[0].reset();
+                        $("#kt_ecommerce_add_job_form .indicator-label").show();
+                        $("#kt_ecommerce_add_job_form .indicator-progress").hide();
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        if (errResp.eType == 'field') {
+                            //field error
+                            $.each(errResp.errors, function(index, field) {
+                                if (field.param == '_csrf') {
+                                    alert(field.msg);
+                                } else {
+                                    $(`#${field.param}Err`).html(field.msg);
+                                }
+                            });
+                        } else {
+                            //final error
+                            Swal.fire({ 
+                                text: errResp.msg, 
+                                icon: "error", 
+                                buttonsStyling: !1, 
+                                confirmButtonText: "Ok, got it!", 
+                                customClass: { confirmButton: "btn btn-danger" },
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                // position: 'top-end',
+                                timer: 2500,
+                                timerProgressBar: true,
+                            });
+                        }
+    
+                        $("#kt_ecommerce_add_job_form .indicator-label").show();
+                        $("#kt_ecommerce_add_job_form .indicator-progress").hide();
+                    }
+                });
+    
+            });
+        </script>
+        <% } %>
+
+    <% if(currentMenu == 'product-variants') { %>
+        <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/product-variants.js"></script>
+        <script src="/js/custom/apps/ecommerce/catalog/save-products-variants.js"></script>    
+        <script type="text/javascript">
+            $("#kt_ecommerce_add_product_form").submit(function(event) {
+                event.preventDefault();
+    
+                tinymce.triggerSave();
+    
+                url = $(this).attr('action');
+                formData = new FormData(this)
+                //formData = $(this).serialize();
+    
+                //editors['description'].getData();
+                //editors['features'].getData();
+                //editors['techSpecification'].getData();
+                //editors['metaDescription'].getData();
+    
+                // let quillDesc = new Quill('#description');
+                // let quillFeatures = new Quill('#features');
+                // let quillTechSpec = new Quill('#techSpecification');
+                // let quillMetaDesc = new Quill('#metaDescription');
+    
+                // let description = quillDesc.editor.scroll.domNode.innerHTML;
+                // let features = quillFeatures.editor.scroll.domNode.innerHTML;
+                // let techSpecification = quillTechSpec.editor.scroll.domNode.innerHTML;
+                // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+    
+                // formData.append('description', description);
+                // formData.append('features', features);
+                // formData.append('techSpecification', techSpecification);
+                // formData.append('metaDescription', metaDescription);
+    
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: formData,
+                    dataType: "json",
+                    processData:false,
+                    contentType: false,
+                    cache: false,
+                    beforeSend: function() {
+                        $("#kt_ecommerce_add_product_form .removeErr").html('');
+                        $("#kt_ecommerce_add_product_form .indicator-label").hide();
+                        $("#kt_ecommerce_add_product_form .indicator-progress").show();
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        Swal.fire({ 
+                            text: succRes.msg, 
+                            icon: "success", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-success" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        }).then(function() {
+                          location.reload();
+                        });
+    
+                        $("#kt_ecommerce_add_product_form")[0].reset();
+                        $("#kt_ecommerce_add_product_form .indicator-label").show();
+                        $("#kt_ecommerce_add_product_form .indicator-progress").hide();
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        if (errResp.eType == 'field') {
+                            //field error
+                            $.each(errResp.errors, function(index, field) {
+                                if (field.param == '_csrf') {
+                                    alert(field.msg);
+                                } else {
+                                    $(`#${field.param}Err`).html(field.msg);
+                                }
+                            });
+                        } else {
+                            //final error
+                            Swal.fire({ 
+                                text: errResp.msg, 
+                                icon: "error", 
+                                buttonsStyling: !1, 
+                                confirmButtonText: "Ok, got it!", 
+                                customClass: { confirmButton: "btn btn-danger" },
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                // position: 'top-end',
+                                timer: 2500,
+                                timerProgressBar: true,
+                            });
+                        }
+    
+                        $("#kt_ecommerce_add_product_form .indicator-label").show();
+                        $("#kt_ecommerce_add_product_form .indicator-progress").hide();
+                    }
+                });
+    
+            });
+    
+            const removeAttachment = (el) => {
+                url = $(el).attr('data-url');
+                csrf = $(el).attr('data-csrf');
+                id = $(el).attr('data-id');
+                attachmentUrl = $(el).attr('data-attachment');
+    
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id: id,
+                        attachmentUrl: attachmentUrl,
+                        csrf: csrf
+                    },
+                    success: function (succRes) {
+                        // location.reload();
+                        Swal.fire({ 
+                            text: succRes.msg, 
+                            icon: "success", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-success" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        }).then(function() {
+                          location.reload();
+                        });
+    
+                        $("#addImgDiv_"+id).remove();
+    
+                    },
+                    error: function (jqXHR, exception) {
+                        errResp = jqXHR.responseJSON;
+                        
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+    
+                    }
+                });
+                
+            }
+        </script>
+        <% } %>
+
+    <% if(currentMenu == 'page') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/page.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/save-products.js"></script>    
+    <script type="text/javascript">
+        $("#kt_ecommerce_add_page_form").submit(function(event) {
+            event.preventDefault();
+
+            tinymce.triggerSave();
+
+            url = $(this).attr('action');
+            //formData = new FormData(this)
+
+            // let quillDesc = new Quill('#description');
+            // let quillMetaDesc = new Quill('#metaDescription');
+
+            // let description = quillDesc.editor.scroll.domNode.innerHTML;
+            // let metaDescription = quillMetaDesc.editor.scroll.domNode.innerHTML;
+
+            //getDescription = editors['description'].getData();
+            //getMetaDescription = editors['metaDescription'].getData();
+
+            formData = $(this).serialize();
+
+            // let quillFeatures = new Quill('#features');
+            // let quillTechSpec = new Quill('#techSpecification');
+
+            // let features = quillFeatures.editor.scroll.domNode.innerHTML;
+            // let techSpecification = quillTechSpec.editor.scroll.domNode.innerHTML;
+
+            // formData.append('description', description);
+            // formData.append('features', features);
+            // formData.append('techSpecification', techSpecification);
+            // formData.append('metaDescription', metaDescription);
+
+            $.ajax({
+                type: "post",
+                url: url,
+                data: formData,
+                dataType: "json",
+                // processData:false,
+                // contentType: false,
+                // cache: false,
+                beforeSend: function() {
+                    $("#kt_ecommerce_add_page_form .removeErr").html('');
+                    $("#kt_ecommerce_add_page_form .indicator-label").hide();
+                    $("#kt_ecommerce_add_page_form .indicator-progress").show();
+                },
+                success: function (succRes) {
+                    // location.reload();
+                    Swal.fire({ 
+                        text: succRes.msg, 
+                        icon: "success", 
+                        buttonsStyling: !1, 
+                        confirmButtonText: "Ok, got it!", 
+                        customClass: { confirmButton: "btn btn-success" },
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: true,
+                        // position: 'top-end',
+                        timer: 2500,
+                        timerProgressBar: true,
+                    }).then(function() {
+                      location.reload();
+                    });
+
+                    $("#kt_ecommerce_add_page_form")[0].reset();
+                    $("#kt_ecommerce_add_page_form .indicator-label").show();
+                    $("#kt_ecommerce_add_page_form .indicator-progress").hide();
+                },
+                error: function (jqXHR, exception) {
+                    errResp = jqXHR.responseJSON;
+                    
+                    if (errResp.eType == 'field') {
+                        //field error
+                        $.each(errResp.errors, function(index, field) {
+                            if (field.param == '_csrf') {
+                                alert(field.msg);
+                            } else {
+                                $(`#${field.param}Err`).html(field.msg);
+                            }
+                        });
+                    } else {
+                        //final error
+                        Swal.fire({ 
+                            text: errResp.msg, 
+                            icon: "error", 
+                            buttonsStyling: !1, 
+                            confirmButtonText: "Ok, got it!", 
+                            customClass: { confirmButton: "btn btn-danger" },
+                            showCloseButton: false,
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            // position: 'top-end',
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                    }
+
+                    $("#kt_ecommerce_add_page_form .indicator-label").show();
+                    $("#kt_ecommerce_add_page_form .indicator-progress").hide();
+                }
+            });
+
+        });
+    </script>
+    <% } %>
+
+    <% if(currentMenu == 'enquiry') { %>
+    <script src="/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/js/custom/apps/ecommerce/catalog/enquiry.js"></script>
+    <% } %>
+</body>
+</html>

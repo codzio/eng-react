@@ -1,0 +1,326 @@
+<%- include("../header"); %>
+<style>
+    .video-btn {
+      margin-left: auto;
+      display: block;
+    }
+    .button-row .form-control {
+      width: 90%;
+    }
+    .button-row {
+      display: flex;
+      align-items: center;
+    }
+</style>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+    <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <%- include("../navbar"); %>
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <%- include("../sidebar"); %>
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content  flex-column-fluid " >
+                        <div id="kt_app_content_container" class="app-container  container-fluid ">
+                            <form id="kt_ecommerce_add_product_form" class="form d-flex flex-column flex-lg-row" action="/admin/product/doUpdateProduct" method="post" enctype="multipart/form-data">
+                                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">    
+
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Category</label>
+                                                <select id="category" name="category" class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="false" data-placeholder="Select Category">
+                                                    <% 
+                                                        categories.forEach(category => { 
+                                                            let isSel = "";
+                                                            if(productData.prodCategory._id.toString() == category._id.toString()) {
+                                                                isSel = "selected";
+                                                            }
+                                                    %>
+                                                        <option
+                                                            <%= isSel %> 
+                                                            value="<%= category._id %>">
+                                                            <%= category.title %>
+                                                        </option>
+                                                    <% }); %>
+                                                </select>
+                                                <span id="categoryErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="form-label">Product</label>
+                                                <select id="product" name="product" class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="false" data-placeholder="Select Product">
+                                                    <option value="">Select Product</option>
+                                                    <% 
+                                                        products.forEach(product => { 
+                                                          let isSel = "";
+                                                            if(productData.product && (productData.product.toString() == product._id.toString())) {
+                                                                isSel = "selected";
+                                                            }  
+                                                    %>
+                                                        <option
+                                                            <%= isSel %> 
+                                                            value="<%= product._id %>">
+                                                            <%= product.title %>
+                                                        </option>
+                                                    <% }); %>
+                                                </select>
+                                                <span id="productErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="required form-label">Title</label>
+                                                <input type="text" name="title" class="form-control mb-2" placeholder="Title" value="<%= productData.title %>" />
+                                                <span id="titleErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Slug</label>
+                                                <input readonly id="slug" type="text" name="slug" class="form-control mb-2" placeholder="Slug" value="<%= productData.slug %>" />
+                                                <span id="slugErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="form-label">Product Features</label>
+                                                <select multiple name="productFeatures[]" class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="false" data-placeholder="Select Product Features">
+                                                    <% 
+                                                        features.forEach(feature => { 
+
+                                                            let isSelected = "";
+
+                                                            productData.prodFeatures.forEach((getSelId) => {
+
+                                                                if(getSelId._id.toString() == feature._id.toString()) {
+                                                                    isSelected = "selected";
+                                                                }
+
+                                                            })
+
+                                                    %>
+                                                        <option <%= isSelected %> value="<%= feature._id %>"><%= feature.title %></option>
+                                                    <% }); %>
+                                                </select>
+                                                <span id="productFeaturesErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Display on Homepage</label>
+                                                <select name="homepage" class="form-select form-select-solid form-select-sm" data-control="select2" data-hide-search="true" data-placeholder="Display on Homepage">
+                                                    <option <%= (!productData.homepage)? 'selected':''; %> value="false">No</option>
+                                                    <option <%= (productData.homepage)? 'selected':''; %> value="true">Yes</option>
+                                                </select>
+                                                <span id="homepageErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label required">Description</label>
+                                                <!-- <div id="description" name="description" class="min-h-200px mb-2"><%- productData.description %></div> -->
+                                                <textarea name="description" cols="4" rows="4" class="form-control mb-2 description"><%- productData.description %></textarea>
+                                                <span id="descriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label">Features</label>
+                                                <!-- <div id="features" name="features" class="min-h-200px mb-2"><%- productData.features %></div> -->
+                                                <textarea name="features" cols="4" rows="4" class="form-control mb-2 description"><%- productData.features %></textarea>
+                                                <span id="featuresErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label">Technical Specification</label>
+                                                <!-- <div id="techSpecification" name="techSpecification" class="min-h-200px mb-2"><%- productData.techSpec %></div> -->
+                                                <textarea name="techSpecification" cols="4" rows="4" class="form-control mb-2 description"><%- productData.techSpec %></textarea>
+                                                <span id="techSpecificationErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label">Disable Linking</label>
+                                                <input <%= (productData.disableLinking)? 'checked':''; %> type="checkbox" name="disableLinking" value="true" class="mb-2">
+                                                <span id="disableLinkingErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label row container-fluid required">Featured Image</label>
+                                                <input type="file" name="featuredImg" class="form-control mb-2" accept=".png, .jpg, .jpeg">
+                                                <div class="form-text">Allowed file types: jpg, jpeg and png.</div>
+                                                <span id="featuredImgErr" class="text-danger removeErr"></span>
+
+                                                <% if(productData.featuredImg) { %>
+                                                
+                                                <div class="image-input image-input-outline mt-10" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url('/<%= productData.featuredImg %>')"></div>
+                                                </div>
+
+                                                <% } %>
+
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label row container-fluid">Additional Images</label>
+                                                <input multiple type="file" name="addImages" class="form-control mb-2" accept=".png, .jpg, .jpeg">
+                                                <div class="form-text">Allowed file types: jpg, jpeg and png.</div>
+                                                <span id="addImagesErr" class="text-danger removeErr"></span>
+
+                                                <% 
+                                                    if(productData.addImages) { 
+                                                        productData.addImages.forEach((addImg) => {
+                                                %>
+                                                
+                                                <div id="addImgDiv_<%= productData._id %>" style="margin-right: 20px;" class="image-input image-input-outline mt-10" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url('/<%= addImg %>')"></div>
+                                                    <label 
+                                                    onclick="removeAttachment(this)" 
+                                                    data-url="/admin/product/doDeleteAddImg"
+                                                    data-csrf="<%= csrfToken %>"
+                                                    data-id="<%= productData._id %>"
+                                                    data-attachment="<%= addImg %>"
+                                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Remove Image">
+                                                        <i class="ki-outline ki-cross fs-2"></i>
+                                                    </label>
+                                                </div>
+
+                                                <% 
+                                                    })
+                                                }
+                                                %>
+
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label row container-fluid">PDF</label>
+                                                <input type="file" name="productPdf" class="form-control mb-2" accept=".pdf, .png, .jpeg, .jpg">
+                                                <div class="form-text">Allowed file types: pdf.</div>
+                                                <span id="productPdfErr" class="text-danger removeErr"></span>
+
+                                                <% if(productData.pdf) { %>
+                                                
+                                                <div id="addImgDiv_<%= productData._id %>" class="image-input image-input-outline mt-10" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url('/<%= productData.pdf %>')"></div>
+                                                    <label 
+                                                    onclick="removeAttachment(this)" 
+                                                    data-url="/admin/product/doDeletePdf"
+                                                    data-csrf="<%= csrfToken %>"
+                                                    data-id="<%= productData._id %>"
+                                                    data-attachment="<%= productData.pdf %>"
+                                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Remove PDF">
+                                                        <i class="ki-outline ki-cross fs-2"></i>
+                                                    </label>
+                                                </div>
+
+                                                <% } %>
+
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label row container-fluid"
+                                                  >Video</label
+                                                >
+                                                <div class="button-row">
+                                                  <input
+                                                    type="text"
+                                                    name="video[]"
+                                                    class="form-control mb-2"
+                                                    <% if (typeof productData.videos[0] !== 'undefined') { %>
+                                                    value="<%= productData.videos[0] %>"
+                                                    <% } %>
+                                                  />
+                                                  <button
+                                                    type="button"
+                                                    class="btn btn-primary btn-sm addMoreBtn video-btn"
+                                                  >
+                                                    Add More
+                                                  </button>
+                                                </div>
+                                                <div id="videoDiv">
+                                                    <% if (productData.videos && productData.videos.length > 0) {  
+                                                        productData.videos.forEach(function(video, iterate) {
+                                                            if(iterate != 0) {
+                                                    %>
+                                                        <div class="button-row" id="video<%= iterate %>">
+                                                            <input value="<%= video %>" type="text" name="video[]" class="form-control mb-2">
+                                                            <button type="button" data-id="video<%= iterate %>" onclick="removeVideo(this)" class="btn btn-danger btn-sm video-btn">Remove</button>
+                                                        </div>
+                                                    <% } 
+                                                        }); 
+                                                        } 
+                                                    %>
+                                                </div>
+                                                <span
+                                                  id="videoErr"
+                                                  class="text-danger removeErr"
+                                                ></span>
+                                              </div>
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>Meta Options</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <div class="mb-10">                             
+                                                <label class="form-label">Meta Title</label>
+                                                <input type="text" class="form-control mb-2" name="metaTitle" placeholder="Meta title" value="<%= productData.metaTitle %>" />      
+                                                <span id="metaTitleErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            
+                                            <div class="mb-10">
+                                                <label class="form-label">Meta Description</label>
+                                                <!-- <div id="metaDescription" name="metaDescription" class="min-h-200px mb-2"><%- productData.metaDescription %></div> -->
+                                                <textarea name="metaDescription" cols="4" rows="4" class="form-control mb-2 description"><%- productData.metaDescription %></textarea>
+                                                <span id="metaDescriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+
+                                        <a href="/admin/product" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
+
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <input type="hidden" name="_id" value="<%= productData._id %>">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="indicator-label">
+                                                Save Changes
+                                            </span>
+                                            <span class="indicator-progress">
+                                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>        
+                        </div>           
+                    </div>
+                </div>
+                <%- include("../sub_footer"); %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../footer"); %>
+<script>
+    const removeVideo = (el) => {
+      id = $(el).data("id");
+      $("#" + id).remove();
+    };
+  
+    $(document).ready(function () {
+      let inc = "<%= productData.videos.length %>";
+      $(".addMoreBtn").click(function () {
+        $("#videoDiv").append(`
+          <div class="button-row" id="video${inc}">
+              <input type="text" name="video[]" class="form-control mb-2">
+              <button type="button" data-id="video${inc}" onclick="removeVideo(this)" class="btn btn-danger btn-sm video-btn">Remove</button>
+          </div>
+        `);
+        inc += 1;
+      });
+    });
+  </script>

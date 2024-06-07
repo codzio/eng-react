@@ -1,0 +1,85 @@
+<%- include("../header"); %>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+    <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <%- include("../navbar"); %>
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <%- include("../sidebar"); %>
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content  flex-column-fluid " >
+                        <div id="kt_app_content_container" class="app-container  container-fluid ">
+                            <form id="kt_ecommerce_add_product_category_form" class="form d-flex flex-column flex-lg-row" action="/admin/product-category/doUpdateCategory" method="post">
+                                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                                    <div class="card card-flush py-4">      
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h2>General</h2>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">                
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="required form-label">Category Name</label>
+                                                <input type="text" name="categoryName" class="form-control mb-2" placeholder="Category name" value="<%= categoryData.title %>" />
+                                                <div class="text-muted fs-7">A category name is required and recommended to be unique.</div>
+                                                <span id="categoryNameErr" class="text-danger removeErr"></span>
+                                            </div>
+                                            <div class="mb-10 fv-row"> 
+                                                <label class="required form-label">Category Slug</label>
+                                                <input readonly id="categorySlug" type="text" name="categorySlug" class="form-control mb-2" placeholder="Category Slug" value="<%= categoryData.slug %>" />
+                                                <div class="text-muted fs-7">A category slug is required and recommended to be unique.</div>
+                                                <span id="categorySlugErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">                      
+                                                <label class="required form-label">Description</label>
+                                                <textarea rows="5" cols="5" name="description" class="form-control mb-2" placeholder="Description"><%= categoryData.description %></textarea>
+                                                <span id="descriptionErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                            <div class="mb-10 fv-row">
+                                                <label class="form-label row container-fluid required">Category Image</label>
+                                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('../media/blank.svg')">
+                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url('<%= categoryImg %>')"></div>
+                                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Category Image">
+                                                        <i class="ki-outline ki-pencil fs-7"></i>          
+                                                        <input id="categoryImg" type="file" name="categoryImg" accept=".png, .jpg, .jpeg"/>
+                                                        <input type="hidden" name="categoryImg_remove"/>
+                                                    </label>
+
+                                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel Category Image">
+                                                        <i class="ki-outline ki-cross fs-2"></i>
+                                                    </span>
+                                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove Category Image">
+                                                        <i class="ki-outline ki-cross fs-2"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="form-text">Allowed file types:  png, jpg, jpeg.</div>
+                                                <span id="categoryImgErr" class="text-danger removeErr"></span>
+                                            </div>
+
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <input type="hidden" name="_id" value="<%= categoryData._id %>">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="indicator-label">
+                                                Save Changes
+                                            </span>
+                                            <span class="indicator-progress">
+                                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>        
+                        </div>           
+                    </div>
+                </div>
+                <%- include("../sub_footer"); %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../footer"); %>

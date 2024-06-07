@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import '../styles/Home.css';
-import { Link, useNavigate, useParams } from "react-router-dom";
+//import { Link, useNavigate, useParams } from "react-router-dom";
 
 const CasesProductOptions = (props) => {
 
-    const { title, description, image, createdAt, products } = props.projectData;
+    const { title, description, image } = props.projectData;
 
     return (
         <div className="cases_sec">

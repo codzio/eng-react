@@ -1,6 +1,7 @@
 import '../styles/Header.css';
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import SearchComp from './search-comp';
 
 function Header(props) {
     const [isSticky, setIsSticky] = useState(false);
@@ -68,7 +69,7 @@ function Header(props) {
 
     return(
         <header className= {`header__main ${isSticky ? 'sticky' : ''}`}>
-			<div className={`header_inner ${ismobileNav ? 'brd' : ""} ${props.hasBanner == 'false'? 'updateNavBg':''}`}>
+			<div className={`header_inner ${ismobileNav ? 'brd' : ""} ${props.hasBanner === 'false'? 'updateNavBg':''}`}>
 				<Link onClick={refreshPage} to="/" className="header_logo">
 					<img src="images/brand-new.png" alt="" />
 				</Link>
@@ -144,7 +145,7 @@ function Header(props) {
 								</ul>
 							</div>
 						</li>
-						<li className={isActive('/blogs','/projects','/use-cases','/career')}>
+						<li className={isActive('/blogs','/projects','/use-cases','/career', '/annual-report', '/videos')}>
 							<span>
 								<NavLink to="/" onClick={(e) => e.preventDefault()}>resources</NavLink>
 								<i className={`fa-solid fa-plus ${isSecondDropdownOpen ? 'rotate' : ''}`} onClick={toggleDropdownSecond}></i>
@@ -155,6 +156,9 @@ function Header(props) {
 									{/*<li className={isActive('/use-cases')}><NavLink onClick={refreshPage} to="/use-cases">Use Cases</NavLink></li>*/}
 									<li className={isActive('/projects')}><NavLink to="/projects">Projects</NavLink></li>
 									<li className={isActive('/career')}><NavLink to="/career">career</NavLink></li>
+									<li className={isActive('/annual-report')}><NavLink to="/annual-report">Annual Report</NavLink></li>
+									<li className={isActive('/videos')}><NavLink to="/videos">Videos</NavLink></li>
+									<li className={isActive('/submit-application')}><NavLink to="/submit-application">Submit Resume</NavLink></li>
 								</ul>
 							</div>
 						</li>
@@ -166,6 +170,7 @@ function Header(props) {
 						<li className={isActive('/contact')}>
 							<NavLink to="/contact" className="contact_us_btn dsp">Contact Us</NavLink>
 						</li>
+						<SearchComp></SearchComp>
 					</ul>
 					<Link to="/contact" className="contact_us_btn">Contact Us</Link>	
 				</div>

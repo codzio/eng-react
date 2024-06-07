@@ -1,0 +1,154 @@
+<%- include("../header"); %>
+<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+  <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
+    <%- include("../navbar"); %>
+    <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+      <%- include("../sidebar"); %>
+      <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <div class="d-flex flex-column flex-column-fluid">
+          <div id="kt_app_content" class="app-content flex-column-fluid">
+            <div
+              id="kt_app_content_container"
+              class="app-container container-fluid"
+            >
+              <form
+                id="kt_ecommerce_add_job_form"
+                class="form d-flex flex-column flex-lg-row"
+                action="/admin/job/doAddJob"
+                method="post"
+                enctype="multipart/form-data"
+              >
+                <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+                  <div class="card card-flush py-4">
+                    <div class="card-header">
+                      <div class="card-title">
+                        <h2>General</h2>
+                      </div>
+                    </div>
+                    <div class="card-body pt-0">
+                      <div class="mb-10 fv-row">
+                        <label class="required form-label">Department</label>
+                        <select
+                          id="department"
+                          name="department"
+                          class="form-select form-select-solid form-select-sm"
+                          data-control="select2"
+                          data-hide-search="false"
+                          data-placeholder="Select Deparment"
+                        >
+                          <option value="">Select Department</option>
+                          <option value="Accounts">Accounts</option>
+                          <option value="HR">HR</option>
+                          <option value="R&amp;D">R&amp;D</option>
+                          <option value="Production">Production</option>
+                          <option value="IT">IT</option>
+                          <option value="Sales &amp; Marketing">
+                            Sales &amp; Marketing
+                          </option>
+                          <option value="Quality Control">
+                            Quality Control
+                          </option>
+                        </select>
+                        <span
+                          id="departmentErr"
+                          class="text-danger removeErr"
+                        ></span>
+                      </div>
+
+                      <div class="mb-10 fv-row">
+                        <label class="required form-label">Title</label>
+                        <input
+                          onkeyup="slugify(this, 'slug')"
+                          type="text"
+                          name="title"
+                          class="form-control mb-2"
+                          placeholder="Title"
+                          value=""
+                        />
+                        <span
+                          id="titleErr"
+                          class="text-danger removeErr"
+                        ></span>
+                      </div>
+
+                      <div class="mb-10 fv-row">
+                        <label class="required form-label">Slug</label>
+                        <input
+                          readonly
+                          id="slug"
+                          type="text"
+                          name="slug"
+                          class="form-control mb-2"
+                          placeholder="Slug"
+                          value=""
+                        />
+                        <span id="slugErr" class="text-danger removeErr"></span>
+                      </div>
+
+                      <div class="mb-10 fv-row">
+                        <label class="required form-label">Location</label>
+                        <input
+                          id="location"
+                          type="text"
+                          name="location"
+                          class="form-control mb-2"
+                          placeholder="Location"
+                          value=""
+                        />
+                        <span
+                          id="locationErr"
+                          class="text-danger removeErr"
+                        ></span>
+                      </div>
+
+                      <div class="mb-10 fv-row">
+                        <label class="form-label required">Description</label>
+                        <textarea
+                          name="description"
+                          cols="4"
+                          rows="4"
+                          class="form-control mb-2 description"
+                        ></textarea>
+                        <span
+                          id="descriptionErr"
+                          class="text-danger removeErr"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-end">
+                    <a
+                      href="/admin/job"
+                      id="kt_ecommerce_add_job_cancel"
+                      class="btn btn-light me-5"
+                    >
+                      Cancel
+                    </a>
+
+                    <input
+                      type="hidden"
+                      name="_csrf"
+                      value="<%= csrfToken %>"
+                    />
+                    <button type="submit" class="btn btn-primary">
+                      <span class="indicator-label"> Save Changes </span>
+                      <span class="indicator-progress">
+                        Please wait...
+                        <span
+                          class="spinner-border spinner-border-sm align-middle ms-2"
+                        ></span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <%- include("../sub_footer"); %>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("../footer"); %>

@@ -6,26 +6,28 @@ import PreLoader from "../component/preloader";
 const CareerForm = lazy(() => import("../component/career-form"));
 
 const SubmitApp = () => {    
-    const [pageTitle, setPageTitle] = useState('Enggenv Solutions | Career');
+    //const [pageTitle, setPageTitle] = useState('Enggenv Solutions | Career');
+    const [pageTitle] = useState('Enggenv Solutions | Career');
     const metaDescription = '';
     const metaImage = 'images/team_image.jpg';
-    const [metaData, setMetaData] = useState({metaDescription: metaDescription, metaImage:metaImage});
+    //const [metaData, setMetaData] = useState({ metaDescription, metaImage });
+    const [metaData] = useState({ metaDescription, metaImage });
 
     const location = useLocation();
-    const [params, setParams] = useState({});
+    const [params, setParams] = useState({ title: '', department: '' });
 
     useEffect(() => {
         // Extract query parameters from the URL
         const searchParams = new URLSearchParams(location.search);
-        const title = searchParams.get('title');
-        const department = searchParams.get('department');
+        const title = searchParams.get('title') || '';
+        const department = searchParams.get('department') || '';
         setParams({ title, department });
     }, [location]);
 
     return (
         <Layout hasBanner="false" pageTitle={pageTitle} metaData={metaData}>
             <Suspense fallback={<PreLoader />}>
-                <CareerForm jobData={params} />
+                <CareerForm params={params} />
             </Suspense>
         </Layout>
     );

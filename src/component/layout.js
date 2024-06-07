@@ -34,20 +34,20 @@ const Layout = ( props ) => {
         fetchData();
       }, [location.pathname]);
 
-      const getPageTitle = (path) => {
-        if(path === "/"){
-          return "Home";
-        }else{
-          const title = path.slice(1);
-          return title.charAt(0).toUpperCase() + title.slice(1);
-        }
-      };
+      // const getPageTitle = (path) => {
+      //   if(path === "/"){
+      //     return "Home";
+      //   }else{
+      //     const title = path.slice(1);
+      //     return title.charAt(0).toUpperCase() + title.slice(1);
+      //   }
+      // };
 
     return (
         <div>
           <HelmetProvider>
             <Helmet>
-                // <title>{getPageTitle(location.pathname)}</title>
+                {/*<title>{getPageTitle(location.pathname)}</title>*/}
                 
                 <title>{pageTitle}</title>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import { useParams } from 'react-router-dom';
-import OtherBanner from "../component/other-banner";
-import CareerForm from '../component/career-form';
+//import OtherBanner from "../component/other-banner";
+//import CareerForm from '../component/career-form';
 import Layout from "../component/layout";
 import PreLoader from "../component/preloader";
 
@@ -13,11 +13,11 @@ const Career = () => {
     const [loading, setLoading] = useState(true); // Add loading state
     const { jobSlug } = useParams();    
 
-    const bannerImg = 'images/banner1.png';
-    const bannerTitle = "Join Us";
+    // const bannerImg = 'images/banner1.png';
+    // const bannerTitle = "Join Us";
     const [pageTitle, setPageTitle] = useState('Enggenv Solutions | Career');
-    const metaDescription = '';
-    const metaImage = 'images/team_image.jpg';
+    //const metaDescription = '';
+    //const metaImage = 'images/team_image.jpg';
     // const [metaData, setMetaData] = useState({metaDescription: metaDescription, metaImage:metaImage});
     const [metaData, setMetaData] = useState([]);
 
